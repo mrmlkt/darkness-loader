@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background-color: #262522; /* Matches Chess.com Dark UI */
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    /* 1. THE OVERLAY LOADING SCREEN */
+    #loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #1e1e1c; 
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease-in-out, visibility 0.6s;
+    }
+
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 6px solid rgba(203, 202, 70, 0.1);
+      border-top: 6px solid #cbca46; /* Chess.com Gold Branding Accent */
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .loading-text {
+      color: #cbca46;
+      margin-top: 20px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* 2. THE MEMBER INTERFACE PANEL */
+    .join-container {
+      margin-top: 20px;
+      border: 2px solid #cbca46;
+      background: #312e2b;
+      padding: 25px;
+      border-radius: 10px;
+      display: inline-block;
+      max-width: 400px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+    }
+    .user-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 3px solid #cbca46;
+      margin-bottom: 15px;
+      background-color: #403e3b;
+    }
+    .join-btn {
+      background-color: #81b64c; /* Chess.com Green button */
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 15px;
+    }
+    .join-btn:hover {
+      background-color: #a3d968;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loading Element Overlay -->
+  <div id="loading-screen">
+    <div class="spinner"></div>
+    <div class="loading-text">ENTERING THE REALM OF SHADOWS...</div>
+  </div>
+
+  <!-- Dynamic Joining Container -->
+  <div class="join-container">
+    <h2>🌌 DARKNESS OF NIGHT</h2>
+    <img id="player-pfp" class="user-avatar" src="https://chess.com" alt="Avatar">
+    
+    <p style="font-size: 18px; margin: 10px 0;">
+      Ready to join the shadows, <br>
+      <span id="player-username" style="color: #cbca46; font-weight: bold;">Guest Player</span>?
+    </p>
+    
+    <button class="join-btn" onclick="redirectToJoin()">Join Club</button>
+  </div>
+
+  <script>
+    // Fades out loading screen after 2.5 seconds
+    window.addEventListener('load', function () {
+      setTimeout(() => {
+        const loader = document.getElementById('loading-screen');
+        loader.style.opacity = '0';
+        loader.style.visibility = 'hidden';
+      }, 2500); 
+    });
+
+    // Detect username from the URL parameters passed by Chess.com context
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const detectedUser = urlParams.get('user');
+      
+      if(detectedUser && detectedUser !== "New Member") {
+        document.getElementById('player-username').innerText = "@" + detectedUser;
+        // Grabs their public avatar cleanly via standard naming rules
+        document.getElementById('player-pfp').src = "https://chess.com" + detectedUser;
+      }
+    } catch(err) {
+      console.log("Iframe profile lookup restricted.");
+    }
+
+    function redirectToJoin() {
+      // Directs the whole page to the official join action node for Darkness of Night
+      window.parent.location.href = "https://chess.com";
+    }
+  </script>
+</body>
+</html>
